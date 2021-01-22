@@ -1,0 +1,59 @@
+﻿// incoming (client -> server)
+
+{
+  "type": "EMIT",
+  "session" : "session id", // optional, no session means send to all
+  "data": {}
+}
+
+{
+  "type": "DIRECT",
+  "receiver": "client id",
+  "response_id": "message response id", // optional, only if callback exists
+  "data": {}
+}
+
+{
+  "type": "RESPONSE",
+  "receiver": "client id",
+  "response_id": "message response id",
+  "data": {}
+}
+
+{
+  "type": "CONFIG",
+  "heartbeat": "ping"
+}
+
+{
+  "type": "CONFIG",
+  "session": {
+    "direction": "join/leave",
+    "names": [
+      // all session names to join / leave
+    ]
+  }
+}
+
+// outgoing (server -> client)
+
+// can be emit or direct
+{
+  "type": "DIRECT",
+  "sender": "client id",
+  "response_id": "message response id", // optional, only if callback exists
+  "data": {}
+}
+
+
+// only replying to a message with a callback
+{
+  "type": "RESPONSE",
+  "sender": "client id",
+  "response_id": "message response id", // optional, only if callback exists
+  "data": {}
+}
+
+{
+  "heartbeat": "pong"
+}
