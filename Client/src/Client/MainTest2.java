@@ -5,7 +5,7 @@ import java.util.*;
 
 class MainTest2 {
 
-    static TCPClient client;
+    static IOClient client;
 
     static boolean flag = false;
 
@@ -16,15 +16,15 @@ class MainTest2 {
 //        System.out.println("Received message from " + from + ": " + message);
         if (message.getMessage().equals("Emitting")) {
             synchronized (clients) {
-                clients.add(message.getSender());
+                clients.add((Client) message.getSender());
             }
         }
     };
 
     public static void main(String[] args) throws Exception {
-        client = new TCPClient(InetAddress.getLocalHost(), 54004);
+        client = new IOClient(InetAddress.getLocalHost(), 54004);
 
-//        client = new TCPClient(InetAddress.getByName("3.20.70.6"), 54003);
+//        client = new IOClient(InetAddress.getByName("3.20.70.6"), 54003);
 
         client.addMessageListener(listener);
 
@@ -36,35 +36,42 @@ class MainTest2 {
 
         Scanner scanner = new Scanner(System.in);
 
-        String type;
-        String to;
-        String input;
         while (true) {
-            System.out.println("Enter message to send");
-            to = scanner.nextLine();
-            Optional<Client> address;
-            synchronized (clients) {
-                address = clients.stream().min(Comparator.comparingDouble(x ->Math.random()));
-            }
-            if (!address.isPresent()) {
-                System.err.println("Address not present");
-            }
-            address.ifPresent(a -> {
-                System.out.println("sending");
-                long start = System.currentTimeMillis();
-                client.sendMessage(a, "message", new ICallback() {
-                    @Override
-                    public void response(Message response) {
-                        long time = System.currentTimeMillis() - start;
-                        System.out.println("Time taken: " + time);
-                    }
+            if (client.isRunning()) {
+                System.out.println("Press any key to send message to random client, or x to stop client");
+                String str = scanner.nextLine();
+                if (str.equals("x")) {
+                    client.stop();
+                    continue;
+                }
+                Optional<Client> address;
+                synchronized (clients) {
+                    address = clients.stream().min(Comparator.comparingDouble(x -> Math.random()));
+                }
+                if (!address.isPresent()) {
+                    System.err.println("Address not present");
+                }
+                address.ifPresent(a -> {
+                    System.out.println("sending");
+                    long start = System.currentTimeMillis();
+                    client.sendMessage(a, "message", new ICallback() {
+                        @Override
+                        public void response(IClientMessage response) {
+                            long time = System.currentTimeMillis() - start;
+                            System.out.println("Time taken: " + time);
+                        }
 
-                    @Override
-                    public int getTimeout() {
-                        return Integer.MAX_VALUE;
-                    }
+                        @Override
+                        public int getTimeout() {
+                            return Integer.MAX_VALUE;
+                        }
+                    });
                 });
-            });
+            } else {
+                System.out.println("Press any key to restart client");
+                scanner.nextLine();
+                client.start();
+            }
         }
 
 //        System.out.println("Ending process");

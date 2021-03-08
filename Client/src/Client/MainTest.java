@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 class MainTest {
 
-    static TCPClient client;
+    static IOClient client;
 
     static final AtomicInteger num = new AtomicInteger(0);
 
@@ -21,9 +21,9 @@ class MainTest {
     };
 
     public static void main(String[] args) throws Exception {
-        client = new TCPClient(InetAddress.getLocalHost(), 54004);
+        client = new IOClient(InetAddress.getLocalHost(), 54004);
 
-//        client = new TCPClient(InetAddress.getByName("3.20.70.6"), 54003);
+//        client = new IOClient(InetAddress.getByName("3.20.70.6"), 54003);
 
         client.addMessageListener(listener);
 

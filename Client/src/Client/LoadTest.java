@@ -10,7 +10,7 @@ public class LoadTest {
         for (int i = 0; i < 1000; i++) {
             int session = (i / 100) + 1;
 
-            IClient client = new TCPClient(InetAddress.getLocalHost(), 54004);
+            IO client = new IOClient(InetAddress.getLocalHost(), 54004);
 
             ICallback callback = res -> {
                 System.out.printf("Received response \"%s\" from %s%n", res.getMessage(), res.getSender());
@@ -18,7 +18,7 @@ public class LoadTest {
 
             ICallback callbackWithTimeout = new ICallback() {
                 @Override
-                public void response(Message response) {
+                public void response(IClientMessage response) {
                     System.out.println("Received response: " + response);
                 }
 
@@ -44,7 +44,7 @@ public class LoadTest {
 
             IServerMessageListener sessionListener = new IServerMessageListener() {
                 @Override
-                public void onMessage(Message message) {
+                public void onMessage(IClientMessage message) {
                     System.out.printf("Received session %d message \"%s\" from %s%n",
                             session, message.getMessage(), message.getSender());
                 }

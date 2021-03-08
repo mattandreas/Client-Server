@@ -1,12 +1,14 @@
 package Client;
 
-public class Message {
+import java.util.UUID;
+
+class Message implements IClientMessage {
 
     private final Client sender;
 
     private final String message;
 
-    private String responseId = null;
+    private UUID responseId = null;
 
     Message(Client sender, String message) {
         this.sender = sender;
@@ -18,7 +20,7 @@ public class Message {
         return message;
     }
 
-    public Client getSender() {
+    public IClient getSender() {
         return sender;
     }
 
@@ -36,10 +38,10 @@ public class Message {
     }
 
     void setResponseId(String responseId) {
-        this.responseId = responseId;
+        this.responseId = UUID.fromString(responseId);
     }
 
-    String getResponseId() {
+    UUID getResponseId() {
         return responseId;
     }
 

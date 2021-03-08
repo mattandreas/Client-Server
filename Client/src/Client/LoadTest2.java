@@ -12,9 +12,9 @@ public class LoadTest2 {
     public static void main(String[] args) throws UnknownHostException, InterruptedException {
         for (int i = 0; i < 100; i++) {
 
-            IClient client = new TCPClient(InetAddress.getLocalHost(), 54004);
+            IO client = new IOClient(InetAddress.getLocalHost(), 54004);
 
-//            IClient client = new TCPClient(InetAddress.getByName("3.20.70.6"), 54005);
+//            IO client = new IOClient(InetAddress.getByName("3.20.70.6"), 54005);
 
             ICallback fancyCallback = ICallback.make(7,
                     res -> System.out.println("Received response: " + res),

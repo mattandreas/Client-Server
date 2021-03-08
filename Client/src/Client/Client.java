@@ -1,12 +1,14 @@
 package Client;
 
-public class Client {
+import java.util.UUID;
 
-    private final TCPClient server;
+class Client implements IClient {
+
+    private final IOClient server;
 
     private final String clientId;
 
-    Client(TCPClient server, String clientId) {
+    Client(IOClient server, String clientId) {
         this.server = server;
         this.clientId = clientId;
     }
@@ -34,7 +36,7 @@ public class Client {
         server.sendMessage(this, message, callback);
     }
 
-    void sendResponse(String message, String responseId) {
+    void sendResponse(String message, UUID responseId) {
         server.sendResponse(clientId, responseId, message);
     }
 
